@@ -1,5 +1,6 @@
 ## Set up Bedrock Dedicated Server on ARM64 Debian
 install_box64() {
+    cd
     echo "Starting box64 installation..."
     if [ $device = "pi3" ]; then
         curl -o box64.deb https://github.com/ryanfortner/box64-debs/raw/refs/heads/master/debian/box64-rpi3arm64_0.4.5+20261125.1e27979-1_arm64.deb
@@ -10,6 +11,18 @@ install_box64() {
     else
         curl -o box64.deb https://github.com/ryanfortner/box64-debs/raw/refs/heads/master/debian/box64_0.4.5+20261125.1e27979-1_arm64.deb
     fi
+    dpkg -i box64.deb
+    if test -e "/bin/box64" then
+        echo "box64 has been installed."
+    else
+        read -p "box64 was not installed. Do you want to retry? (y/n): " confirm
+        if [ $confirm = true ]; then
+            install_box64
+        elif [ $confirm = false ]; then
+            echo "Ending."
+        else
+            echo "Invalid input."
+        fi
 }
 echo -e "RaspiBedrockServer v1.0.0\n"
 c=false
